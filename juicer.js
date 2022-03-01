@@ -70,9 +70,6 @@ async function findListings(selector, paginationSelector, page) {
     }
     console.log(listingsFinal.join());
     
-    //oi 
-    // boobie
-    //oi 2
 }
 start()
 
