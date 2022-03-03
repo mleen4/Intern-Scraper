@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer')
 const fs = require('fs/promises');
 const { IncomingMessage } = require('http');
+const {GoogleSpreadsheet} = require('google-spreadsheet');
+const creds = require('./client-secret.json')
 const testListing = '#post-23622 > div > div > div > div > div > div > ul > li > a > div > h3'
 const paginationSelector = "#post-23622 > div > div > div > div > div > div.job_listings > nav > ul > li"
 const formSelector = "#search_categories";
@@ -10,8 +12,12 @@ const listing = '#post-23622 > div > div.fusion-fullwidth.fullwidth-box.fusion-b
 const volunteerCheckbox = '#job_type_volunteering'
 const jobsCheckbox = '#job_type_jobs'
 const lastChild = "#post-23622 > div > div.fusion-fullwidth.fullwidth-box.fusion-builder-row-3.nonhundred-percent-fullwidth.non-hundred-percent-height-scrolling > div > div > div > div.job_listings > nav > ul > li:last-child"
-
 const testJuice = "#post-23622 > div > div.fusion-fullwidth.fullwidth-box.fusion-builder-row-3.nonhundred-percent-fullwidth.non-hundred-percent-height-scrolling > div > div > div > div.job_listings > nav > ul > li:nth-child(2) > a"
+//Need to clean this up, place in json?? And Trim the Selectors
+
+const doc = new GoogleSpreadsheet('1ZRfUEe3PxUVPoyz7nZByH4y1xKjGQjq3UFXDh-twKj8'); //Initializing Sheet
+
+
 async function start() {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
@@ -65,11 +71,49 @@ async function findListings(selector, paginationSelector, page) {
             console.log(paginationNew);
             await page.click(lastChild)
             await page.waitForSelector(selector, {visible: true})
-        }
-        
+        }     
     }
-    console.log(listingsFinal.join());
+    let tempArray = []
+    listingsFinal.forEach((listing) => {
+        tempArray = tempArray.concat(listing)
+    })
+
+    console.log(tempArray);
+    // console.log(listingsFinal);
+
+    AccessSpreadsheet(tempArray);
     
 }
+
+async function AccessSpreadsheet(ListingsArray)
+{
+    let formattedArray = [{}]
+    //Connecting and Authorizing Spreadsheet
+    await doc.useServiceAccountAuth({
+        client_email: creds.client_email,
+        private_key: creds.private_key,
+    });
+    await doc.loadInfo()
+    const sheet = doc.sheetsByIndex[0] // Which sheet we are actually using
+    //Nope dumb
+    // ListingsArray.forEach(listing => {
+    //     listing = formattedArray.title;
+    //     console.log(formattedArray.title);
+    // })
+
+    // Didn't work as expected.
+    // ListingsArray.forEach(async listing => {
+    //     const thisRow = await sheet.addRow({Title: listing});
+    // })
+    const rows = await sheet.getRows();
+    for(let i = 0; i <= ListingsArray.length; i++)
+    {
+        const rows = await sheet.addRow({Title: ListingsArray[i]})
+    }
+
+    
+
+}
+
 start()
 

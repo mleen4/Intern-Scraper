@@ -1,5 +1,8 @@
 const puppeteer = require('puppeteer')
 const fs = require('fs/promises')
+const {GoogleSpreadsheet} = require('google-spreadsheet');
+
+
 
 async function start() {
     const browser = await puppeteer.launch()
@@ -44,5 +47,6 @@ async function start() {
     }
     await browser.close()
 }
+
 
 start()
