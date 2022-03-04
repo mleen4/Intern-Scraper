@@ -26,11 +26,6 @@ async function start() {
     })
     console.log('$$eval - ' + namesTwo)
 
-    
-
-
-    
-
     await page.click('#clickme')
     const clickedData  = await page.$eval("#data", el => el.textContent)
     console.log(clickedData);
