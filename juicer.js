@@ -3,7 +3,9 @@ const fs = require('fs/promises');
 const { IncomingMessage } = require('http');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
 const creds = require('./client-secret.json')
-const selector = require('./selectors.json')
+const selector = require('./selectors.json');
+const { setUncaughtExceptionCaptureCallback } = require('process');
+const { isFunction } = require('util');
 
 const doc = new GoogleSpreadsheet('1ZRfUEe3PxUVPoyz7nZByH4y1xKjGQjq3UFXDh-twKj8'); //Initializing Sheet
 
@@ -21,7 +23,6 @@ async function start() {
     await tickCheckbox(selector.volunteerCheckbox, selector.jobsCheckbox, page)
     await resultsFound(selector.resultsFoundSelector, page)
     await findListings(selector.listing, selector.pagination, page)
-
     await browser.close()
 }
 
@@ -72,9 +73,8 @@ async function findListings(selector, paginationSelector, page) {
     
 }
 
-async function AccessSpreadsheet(ListingsArray)
+async function AccessSpreadsheet(listingsArray)
 {
-    let formattedArray = [{}]
     //Connecting and Authorizing Spreadsheet
     await doc.useServiceAccountAuth({
         client_email: creds.client_email,
@@ -83,10 +83,17 @@ async function AccessSpreadsheet(ListingsArray)
     await doc.loadInfo()
     const sheet = doc.sheetsByIndex[0] // Which sheet we are actually using
 
+    // If Spreadsheet reset is required, run this line and disable QuerySheet()
+    // await PostToSheet(sheet, listingsArray)
+    await QuerySheet(sheet, listingsArray)
+}
+
+async function PostToSheet(sheet, listingsArray)
+{
     const rows = await sheet.getRows();
-    for(let i = 0; i <= ListingsArray.length; i++)
+    for(let i = 0; i <= listingsArray.length; i++)
     {
-        const rows = await sheet.addRow({Title: ListingsArray[i]})
+        const rows = await sheet.addRow({Title: listingsArray[i]})
     }
 
     //Nope dumb
@@ -99,7 +106,28 @@ async function AccessSpreadsheet(ListingsArray)
     // ListingsArray.forEach(async listing => {
     //     const thisRow = await sheet.addRow({Title: listing});
     // })
+}
 
+async function QuerySheet(sheet, listingsArray)
+{
+    
+    let queryArray = await sheet.getRows()
+    let testArray = []
+    for(let i = 0; i <= queryArray.length; i++)
+    {
+        if(queryArray[i] != null)
+        {
+            testArray.push(queryArray[i].Title)
+        }       
+    }
+    for(let j = 0; j < listingsArray.length; j++)
+    {
+        if(!testArray.includes(listingsArray[j]))
+        {
+            console.log("New Listing Added: " + listingsArray[j])
+            const rows = await sheet.addRow({Title: listingsArray[j]})
+        }
+    }
 }
 
 start()
