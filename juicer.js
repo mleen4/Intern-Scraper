@@ -16,12 +16,7 @@ async function start() {
         return element.textContent;
     })
     console.log(pageHeading);
-
-
-
     
-
-
     await formInput(selector.formSelector, page)
     await tickCheckbox(selector.volunteerCheckbox, selector.jobsCheckbox, page)
     await resultsFound(selector.resultsFoundSelector, page)
