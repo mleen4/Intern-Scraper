@@ -4,8 +4,6 @@ const { IncomingMessage } = require('http');
 const {GoogleSpreadsheet} = require('google-spreadsheet');
 const creds = require('./client-secret.json')
 const selector = require('./selectors.json');
-const { setUncaughtExceptionCaptureCallback } = require('process');
-const { isFunction } = require('util');
 
 const doc = new GoogleSpreadsheet('1ZRfUEe3PxUVPoyz7nZByH4y1xKjGQjq3UFXDh-twKj8'); //Initializing Sheet
 
@@ -19,11 +17,18 @@ async function start() {
     })
     console.log(pageHeading);
 
+
+
+    
+
+
     await formInput(selector.formSelector, page)
     await tickCheckbox(selector.volunteerCheckbox, selector.jobsCheckbox, page)
     await resultsFound(selector.resultsFoundSelector, page)
     await findListings(selector.listing, selector.pagination, page)
     await browser.close()
+
+
 }
 
 async function formInput(selector, page) {
@@ -110,7 +115,7 @@ async function PostToSheet(sheet, listingsArray)
 
 async function QuerySheet(sheet, listingsArray)
 {
-    
+    let date = new Date();
     let queryArray = await sheet.getRows()
     let testArray = []
     for(let i = 0; i <= queryArray.length; i++)
@@ -125,7 +130,7 @@ async function QuerySheet(sheet, listingsArray)
         if(!testArray.includes(listingsArray[j]))
         {
             console.log("New Listing Added: " + listingsArray[j])
-            const rows = await sheet.addRow({Title: listingsArray[j]})
+            const rows = await sheet.addRow({Title: listingsArray[j], Date_Scraped: date.toLocaleDateString()})
         }
     }
 }
