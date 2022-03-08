@@ -34,10 +34,7 @@ async function start() {
     await findListings(selector.listing, selector.pagination, page)
     await browser.close()
 
-
 }
-
-
 
 async function formInput(selector, page) {
     await page.type(selector, 'Computing & Information Systems');
