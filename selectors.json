@@ -4,5 +4,6 @@
      "resultsFoundSelector": "#post-23622 > div > div > div > div > div > div > form > div > span",
      "volunteerCheckbox": "#job_type_volunteering",
      "jobsCheckbox": "#job_type_jobs",
-     "pagination": "#post-23622 > div > div > div > div > div > div > nav > ul > li:last-child"
+     "pagination": "#post-23622 > div > div > div > div > div > div > nav > ul > li:last-child",
+     "modalCloseSelector": "#popmake-69179 > button"
 }

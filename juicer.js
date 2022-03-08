@@ -16,10 +16,17 @@ async function start() {
         return element.textContent;
     })
     console.log(pageHeading);
-    
+
     await formInput(selector.formSelector, page)
     await tickCheckbox(selector.volunteerCheckbox, selector.jobsCheckbox, page)
+
+    // Added a Modal, so this is a temporary work around.
+    await page.waitForSelector(selector.modalCloseSelector, {visible: true})
+    await page.click(selector.modalCloseSelector)
+    
+    
     await resultsFound(selector.resultsFoundSelector, page)
+    await page.screenshot({path: "testscreenshot.png"})
     await findListings(selector.listing, selector.pagination, page)
     await browser.close()
 
@@ -27,6 +34,7 @@ async function start() {
 }
 
 async function formInput(selector, page) {
+    await page.waitForSelector(selector, {visible: true})
     await page.type(selector, 'Computing & Information Systems');
     await page.keyboard.press('Enter')
 }
@@ -57,6 +65,7 @@ async function findListings(selector, paginationSelector, page) {
         }
         else {
             console.log(paginationNew);
+            await page.screenshot({path: "testscreenshot.png"})
             await page.click(paginationSelector)
             await page.waitForSelector(selector, {visible: true})
         }     
