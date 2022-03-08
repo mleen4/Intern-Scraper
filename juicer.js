@@ -17,14 +17,18 @@ async function start() {
     })
     console.log(pageHeading);
 
-    await formInput(selector.formSelector, page)
-    await tickCheckbox(selector.volunteerCheckbox, selector.jobsCheckbox, page)
+    
 
-    // Added a Modal, so this is a temporary work around.
+
+
+    await formInput(selector.formSelector, page)
+    await tickCheckbox(selector.volunteerCheckbox, selector.jobsCheckbox, selector.listing, page)
+
+    // Added a Modal, so this is a temporary work around (lines 28-30).
     await page.waitForSelector(selector.modalCloseSelector, {visible: true})
     await page.click(selector.modalCloseSelector)
-    
-    
+    await page.waitForSelector(selector.modalCloseSelector, {hidden: true})
+
     await resultsFound(selector.resultsFoundSelector, page)
     await page.screenshot({path: "testscreenshot.png"})
     await findListings(selector.listing, selector.pagination, page)
@@ -33,15 +37,17 @@ async function start() {
 
 }
 
+
+
 async function formInput(selector, page) {
-    await page.waitForSelector(selector, {visible: true})
     await page.type(selector, 'Computing & Information Systems');
     await page.keyboard.press('Enter')
 }
 
-async function tickCheckbox(checkboxOne, checkboxTwo, page) {
+async function tickCheckbox(checkboxOne, checkboxTwo, listing, page) {
     await page.click(checkboxOne)
     await page.click(checkboxTwo)
+    await page.waitForSelector(listing)
 }
 
 async function resultsFound(selector, page) {
