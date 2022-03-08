@@ -65,7 +65,6 @@ async function findListings(selector, paginationSelector, page) {
         }
         else {
             console.log(paginationNew);
-            await page.screenshot({path: "testscreenshot.png"})
             await page.click(paginationSelector)
             await page.waitForSelector(selector, {visible: true})
         }     
