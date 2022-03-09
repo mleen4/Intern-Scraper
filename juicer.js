@@ -30,7 +30,6 @@ async function start() {
     await page.waitForSelector(selector.modalCloseSelector, {hidden: true})
 
     await resultsFound(selector.resultsFoundSelector, page)
-    await page.screenshot({path: "testscreenshot.png"})
     await findListings(selector.listing, selector.pagination, page)
     await browser.close()
 
@@ -137,6 +136,12 @@ async function QuerySheet(sheet, listingsArray)
         {
             console.log("New Listing Added: " + listingsArray[j])
             const rows = await sheet.addRow({Title: listingsArray[j], Date_Scraped: date.toLocaleDateString()})
+        }
+        else{
+            //Unsure if this block is working as intended
+            let rowIndex = testArray.indexOf(listingsArray[j], 0)
+            queryArray[rowIndex].Last_Scraped = date.toLocaleDateString()
+            await queryArray[rowIndex].save();
         }
     }
 }
