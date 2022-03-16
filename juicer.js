@@ -80,7 +80,6 @@ async function findListings(selector, paginationSelector, page) {
 
     console.log(tempArray);
     console.log("Array contains " + tempArray.length + " Items")
-    await resultsFound(selector, page)
     // console.log(listingsFinal);
 
     AccessSpreadsheet(tempArray);
