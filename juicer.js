@@ -27,8 +27,10 @@ async function start() {
     // Added a Modal, so this is a temporary work around (lines 28-30).
     await page.waitForSelector(selector.modalCloseSelector, {visible: true})
     await page.click(selector.modalCloseSelector)
-    await page.waitForSelector(selector.modalCloseSelector, {hidden: true})
-
+    await page.waitForSelector(selector.modalSelector, {hidden: true})
+    console.log("modal is hidden")
+    await page.screenshot({path: "newScreenshot.png"})
+    // await page.waitForSelector()
     await resultsFound(selector.resultsFoundSelector, page)
     await findListings(selector.listing, selector.pagination, page)
     await browser.close()
@@ -77,6 +79,8 @@ async function findListings(selector, paginationSelector, page) {
     })
 
     console.log(tempArray);
+    console.log("Array contains " + tempArray.length + " Items")
+    await resultsFound(selector, page)
     // console.log(listingsFinal);
 
     AccessSpreadsheet(tempArray);
