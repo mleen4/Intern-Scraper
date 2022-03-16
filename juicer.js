@@ -28,7 +28,6 @@ async function start() {
     await page.waitForSelector(selector.modalCloseSelector, {visible: true})
     await page.click(selector.modalCloseSelector)
     await page.waitForSelector(selector.modalSelector, {hidden: true})
-    console.log("modal is hidden")
     await page.screenshot({path: "newScreenshot.png"})
     // await page.waitForSelector()
     await resultsFound(selector.resultsFoundSelector, page)
