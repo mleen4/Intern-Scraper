@@ -5,7 +5,8 @@
      "volunteerCheckbox": "#job_type_volunteering",
      "jobsCheckbox": "#job_type_jobs",
      "pagination": "#post-23622 > div > div > div > div > div > div > nav > ul > li:last-child",
-     "modalCloseSelector": "#popmake-69179 > button",
-     "modalSelector": "#popmake-69179"
+     "modalCloseSelector": "#popmake-70936 > button",
+     "newModalSelector":"#popmake-70936 > button",
+     "modalSelector": "#popmake-70936"
 
 }
